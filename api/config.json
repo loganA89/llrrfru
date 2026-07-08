@@ -1,0 +1,6 @@
+{
+  "game_version": "1.10.10755",
+  "api_base": "https://iran.fruitcraft.ir/",
+  "encryption_type": "XOR_SHA512",
+  "device_id_prefix": "android_"
+}
