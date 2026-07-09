@@ -1,6 +1,7 @@
 import json
 import base64
 import hashlib
+import urllib.parse
 import urllib.parse as url
 import requests
 import urllib3
@@ -30,6 +31,20 @@ class FruitClient:
         encrypted = base64.b64encode(self._xor_str(edata_b, key_b))
         return url.quote(encrypted, safe="")
 
+    def decrypt_response(self, encrypted_text: str) -> dict:
+        """Decrypt V2 encrypted server response"""
+        key = "mwBSDp1nMhcdCravltVGADXTFx7bN9mr0XMgyDezIJghf65lvXhRdLWrScCk"
+        try:
+            # URL decode, Base64 decode, XOR
+            data = base64.b64decode(urllib.parse.unquote(encrypted_text))
+            key_bytes = key.encode('utf-8')
+            result = bytearray()
+            for i in range(len(data)):
+                result.append(data[i] ^ key_bytes[i % len(key_bytes)])
+            return json.loads(result.decode('utf-8'))
+        except Exception as e:
+            return {"error": str(e), "raw": encrypted_text}
+
     def post(self, endpoint, payload_dict):
         target_url = self.api_base + endpoint
         edata_val = self.encrypt_v2(payload_dict)
@@ -40,7 +55,8 @@ class FruitClient:
         }
         resp = self.session.post(target_url, data=raw_body, headers=headers, timeout=15)
         if resp.status_code == 200:
-            return resp.json()
+            # Decrypt the response
+            return self.decrypt_response(resp.text)
         return None
 
     def login(self, recovery_code, udid):
