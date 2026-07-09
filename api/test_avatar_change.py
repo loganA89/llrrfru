@@ -26,9 +26,8 @@ def main():
     # The Lua code sets body = { avatar_id = A0_16 }
     payload = {'avatar_id': target_avatar_id}
     
-    # Some endpoints optionally check an MD5 of the 'q' variable to verify state sync. 
-    # Lua's `setAvatar` doesn't explicitly do this, but if the server requires it:
-    # payload['check'] = hashlib.md5(str(sm.q).encode()).hexdigest()
+    # MD5 check for operation validation, using the extracted 'q' parameter
+    payload['check'] = hashlib.md5(str(sm.q).encode('utf-8')).hexdigest()
     
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
