@@ -1,0 +1,77 @@
+[2026-07-09 17:27:58,832] TEST STARTED: Bug 1
+[2026-07-09 17:27:58,832] PAYLOAD: {'deposit': -100}
+[2026-07-09 17:27:59,052] RESPONSE: {'status': True, 'data': {'added_balance': 0, 'bank_account_balance': 5000, 'player_gold': 20056}}
+[2026-07-09 17:27:59,052] RESULT: VULNERABLE
+[2026-07-09 17:27:59,053] TEST COMPLETED
+
+[2026-07-09 17:29:17,959] TEST STARTED: Bug 1
+[2026-07-09 17:29:17,959] PAYLOAD: {'deposit': -100}
+[2026-07-09 17:29:18,325] RESPONSE: {'error': 'Invalid base64-encoded string: number of data characters (1637) cannot be 1 more than a multiple of 4', 'raw': '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml">\n\n<head>\n\t<title>Fruitcraft Server</title>\n\t<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>\n\t<link rel="icon" href="/favicon.ico" type="image/x-icon"/>\n\t<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>\n\t<link href="/css/sima/reset.css" media="screen" rel="stylesheet" type="text/css" />\t<link href="/css/sima/reset.css" media="screen" rel="stylesheet" type="text/css" />\n<link href="/css/sima/style.css" media="screen" rel="stylesheet" type="text/css" />\t<link href="/css/sima/reset.css" media="screen" rel="stylesheet" type="text/css" />\n<link href="/css/sima/style.css" media="screen" rel="stylesheet" type="text/css" />\n<link href="/css/sima/invalid.css" media="screen" rel="stylesheet" type="text/css" />\t<link href="/css/sima/reset.css" media="screen" rel="stylesheet" type="text/css" />\n<link href="/css/sima/style.css" media="screen" rel="stylesheet" type="text/css" />\n<link href="/css/sima/invalid.css" media="screen" rel="stylesheet" type="text/css" />\n<link href="/css/change.css" media="screen" rel="stylesheet" type="text/css" />\t<script type="text/javascript">\n\t\tfunction goToTop() {\n\t\t\tjQuery(document).scrollTop(0);\n\t\t}\n\t</script>\n</head>\n\n<body id="login">\n\n<div id="login-wrapper" class="png_bg">\n\t<div id="login-top">\n\n\t\t<h1>Fruit Admin</h1>\n\t\t<img id="logo" style="max-width: 400px;" src="/images/fruitcraft-trading-card-game-header.png"\n\t\t     alt="Fruitcraft Logo"/>\n\t</div>\n\t<!-- End #logn-top -->\n\t<div id="login-content">\n\t\t<form action="/admin/login" method="post">\n\t\t\t\t\t\t<div class="notification information png_bg">\n\t\t\t\t<div>\n\t\t\t\t\tWelcome!\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t\t\t\t<p>\n\t\t\t\t<label>Username</label>\n\t\t\t\t<input class="text-input" type="text" name="username" value=""/>\n\t\t\t</p>\n\n\t\t\t<div class="clear"></div>\n\t\t\t<p>\n\t\t\t\t<label>Password</label>\n\t\t\t\t<input class="text-input" type="password" name="password"/>\n\t\t\t</p>\n\n\t\t\t<div class="clear"></div>\n\t\t\t<p>\n\t\t\t\t<input class="button" type="submit" value="Sign In"/>\n\t\t\t</p>\n\t\t</form>\n\t\t<div style=\'height: 70px\'></div>\n\t\t<div id="footer" style="position: relative;">\n\t\t\t<small> &#169; Copyright 2013 Turned on Digital</small>\n\t\t</div>\n\t</div>\n\t<!-- End #login-content -->\n</div>\n<!-- End #login-wrapper -->\n</body>\n</html>\n'}
+[2026-07-09 17:29:18,332] RESULT: PATCHED
+[2026-07-09 17:29:18,332] TEST COMPLETED
+
+[2026-07-09 17:30:14,797] TEST STARTED: Bug 1
+[2026-07-09 17:30:14,797] PAYLOAD: {'deposit': -100}
+[2026-07-09 17:30:15,015] RESPONSE: {'status': True, 'data': {'added_balance': 0, 'bank_account_balance': 5000, 'player_gold': 20056}}
+[2026-07-09 17:30:15,016] RESULT: VULNERABLE
+[2026-07-09 17:30:15,019] TEST COMPLETED
+
+[2026-07-09 17:28:02,070] TEST STARTED: Bug 2
+[2026-07-09 17:28:02,072] PAYLOAD: {'player_gold': -1000}
+[2026-07-09 17:28:02,343] RESPONSE: {'status': False, 'data': {'code': 100, 'arguments': []}}
+[2026-07-09 17:28:02,345] RESULT: PATCHED
+[2026-07-09 17:28:02,347] TEST COMPLETED
+
+
+[2026-07-09 17:29:31,860] TEST STARTED: Bug 2
+[2026-07-09 17:29:31,861] PAYLOAD: {'player_gold': -1000}
+[2026-07-09 17:29:32,095] RESPONSE: {'status': False, 'data': {'code': 100, 'arguments': []}}
+[2026-07-09 17:29:32,096] RESULT: PATCHED
+[2026-07-09 17:29:32,096] TEST COMPLETED
+
+
+[2026-07-09 17:28:05,355] TEST STARTED: Bug 3
+[2026-07-09 17:28:05,356] PAYLOAD: {'card1_id': 702962060, 'card2_id': 702962060}
+[2026-07-09 17:28:05,577] RESPONSE: {'status': False, 'data': {'code': 118, 'arguments': []}}
+[2026-07-09 17:28:05,578] RESULT: PATCHED
+[2026-07-09 17:28:05,579] TEST COMPLETED
+
+[2026-07-09 17:30:18,030] TEST STARTED: Bug 2
+[2026-07-09 17:30:18,031] PAYLOAD: {'player_gold': -1000}
+[2026-07-09 17:30:18,257] RESPONSE: {'status': False, 'data': {'code': 100, 'arguments': []}}
+[2026-07-09 17:30:18,258] RESULT: PATCHED
+[2026-07-09 17:30:18,258] TEST COMPLETED
+
+[2026-07-09 17:30:21,264] TEST STARTED: Bug 3
+[2026-07-09 17:30:21,267] PAYLOAD: {'card1_id': 702962060, 'card2_id': 702962060}
+[2026-07-09 17:30:21,507] RESPONSE: {'status': False, 'data': {'code': 118, 'arguments': []}}
+[2026-07-09 17:30:21,507] RESULT: PATCHED
+[2026-07-09 17:30:21,508] TEST COMPLETED
+[2026-07-09 17:28:08,588] TEST STARTED: Bug 4
+[2026-07-09 17:28:08,589] PAYLOAD: {'amount': -10, 'potion': -10}
+[2026-07-09 17:28:18,401] RESULT: FAILED
+[2026-07-09 17:28:18,402] TEST COMPLETED
+
+[2026-07-09 17:29:59,213] TEST STARTED: Bug 4
+[2026-07-09 17:29:59,213] PAYLOAD: {'amount': -10, 'potion': -10}
+[2026-07-09 17:30:08,914] RESULT: FAILED
+[2026-07-09 17:30:08,916] TEST COMPLETED
+
+[2026-07-09 17:30:24,521] TEST STARTED: Bug 4
+[2026-07-09 17:30:24,522] PAYLOAD: {'amount': -10, 'potion': -10}
+[2026-07-09 17:30:34,241] RESULT: FAILED
+[2026-07-09 17:30:34,241] TEST COMPLETED
+
+
+[2026-07-09 17:28:18,404] TEST STARTED: Bug 5
+[2026-07-09 17:28:18,404] PAYLOAD: {'battle_id': 999999}
+[2026-07-09 17:28:19,042] RESPONSE: [{'status': False, 'data': {'code': 145, 'arguments': []}}, {'status': False, 'data': {'code': 145, 'arguments': []}}, {'status': False, 'data': {'code': 145, 'arguments': []}}, {'status': False, 'data': {'code': 145, 'arguments': []}}, {'status': False, 'data': {'code': 145, 'arguments': []}}]
+[2026-07-09 17:28:19,047] RESULT: PATCHED
+[2026-07-09 17:28:19,048] TEST COMPLETED
+
+
+[2026-07-09 17:30:34,245] TEST STARTED: Bug 5
+[2026-07-09 17:30:34,245] PAYLOAD: {'battle_id': 999999}
+[2026-07-09 17:30:34,903] RESPONSE: [{'status': False, 'data': {'code': 145, 'arguments': []}}, {'status': False, 'data': {'code': 145, 'arguments': []}}, {'status': False, 'data': {'code': 145, 'arguments': []}}, {'status': False, 'data': {'code': 145, 'arguments': []}}, {'status': False, 'data': {'code': 145, 'arguments': []}}]
+[2026-07-09 17:30:34,903] RESULT: PATCHED
+[2026-07-09 17:30:34,903] TEST COMPLETED
