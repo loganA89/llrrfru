@@ -1,0 +1,5 @@
+[2026-07-09 17:59:51] TEST STARTED: Bug 2
+[2026-07-09 17:59:51] PAYLOAD: {'player_gold': -1000}
+[2026-07-09 17:59:51] RESPONSE: {'status': False, 'data': {'code': 100, 'arguments': []}}
+[2026-07-09 17:59:51] RESULT: PATCHED
+[2026-07-09 17:59:51] TEST COMPLETED

@@ -1,0 +1,5 @@
+[2026-07-09 18:00:08] TEST STARTED: Bug 3
+[2026-07-09 18:00:08] PAYLOAD: {'card1_id': 702962060, 'card2_id': 702962060}
+[2026-07-09 18:00:08] RESPONSE: {'status': False, 'data': {'code': 118, 'arguments': []}}
+[2026-07-09 18:00:08] RESULT: PATCHED
+[2026-07-09 18:00:08] TEST COMPLETED
