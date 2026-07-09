@@ -1,11 +1,9 @@
 import json
 import os
 import logging
-import urllib3
+import hashlib
 from session_manager import SessionManager
 
-# Disable SSL warnings
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
 
 def main():
@@ -13,19 +11,25 @@ def main():
     
     # 1. Load Session
     if not sm.load_session():
-        logging.error("No active session found in session.json. You must login first.")
-        # For testing purposes, we could prompt for login here, but strict flow demands we load it.
+        logging.error("No active session found in session.json. You must login first via test_connection.py.")
         return
 
-    # 2. GET available avatars (In Fruit Craft, basic avatars IDs 1 & 2 are free/default unlocked)
-    # Often stored client-side in Data.Avatars.lua. We will pick Avatar ID: 2
+    # 2. GET available avatars
+    # In Fruit Craft, basic avatars IDs 1 & 2 are free/default unlocked. We will pick Avatar ID 2.
     target_avatar_id = 2 
     logging.info(f"Selected target avatar ID: {target_avatar_id}")
 
     # 3. POST to change avatar
-    # Based on naming conventions found in Constants.lua, the endpoint is likely player/setavatar or profile update.
-    url = sm.api_base.rstrip('/') + '/player/setavatar'
+    # From decompiled code, changing the avatar uses the generic /player/setplayerinfo route.
+    url = sm.api_base.rstrip('/') + '/player/setplayerinfo'
+    
+    # The Lua code sets body = { avatar_id = A0_16 }
     payload = {'avatar_id': target_avatar_id}
+    
+    # Some endpoints optionally check an MD5 of the 'q' variable to verify state sync. 
+    # Lua's `setAvatar` doesn't explicitly do this, but if the server requires it:
+    # payload['check'] = hashlib.md5(str(sm.q).encode()).hexdigest()
+    
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
     result = {
@@ -56,7 +60,7 @@ def main():
                 result['error'] = "Invalid JSON response"
                 logging.error("Failed to parse JSON response.")
         elif response.status_code == 404:
-            logging.error("Endpoint '/player/setavatar' not found. The API might use a different profile update route.")
+            logging.error(f"Endpoint '{url}' not found.")
             result['error'] = "404 Not Found"
         else:
             result['response'] = response.text
