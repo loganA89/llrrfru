@@ -115,3 +115,8 @@ class FruitClient:
         if resp and resp.get('status') and 'result' in resp:
             self.q += 1
         return resp
+
+    def change_avatar(self, avatar_id):
+        """Change player's avatar"""
+        payload = {'avatar_id': avatar_id}
+        return self.post('/player/setplayerinfo', payload)
