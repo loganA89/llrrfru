@@ -8,6 +8,8 @@ import urllib3
 import time
 import logging
 from typing import List, Dict, Optional, Any
+import os, sys
+sys.path.insert(0, os.path.dirname(__file__))
 from captcha_solver import CaptchaSolver
 
 # Disable warnings globally since we're interacting with legacy endpoints that may have SSL issues
