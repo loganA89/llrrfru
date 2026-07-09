@@ -1,0 +1,6 @@
+[2026-07-09 18:17:27] TEST STARTED: Bug 1
+[2026-07-09 18:17:27] PAYLOAD: {'deposit': -100}
+[2026-07-09 18:17:27] Server returned an HTML exception/crash instead of JSON. Assuming PATCHED/INVALID.
+[2026-07-09 18:17:27] RESPONSE: {'status': False, 'error': 'Server returned HTML exception', 'raw_html': True}
+[2026-07-09 18:17:27] RESULT: PATCHED
+[2026-07-09 18:17:27] TEST COMPLETED
