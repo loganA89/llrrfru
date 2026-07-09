@@ -1,27 +1,26 @@
 import json
 import base64
-import sys
 import hashlib
 import urllib.parse as url
 import requests
-import logging
+import urllib3
+
+# Disable warnings globally since we're interacting with legacy endpoints that may have SSL issues
+urllib3.disable_warnings()
 
 class FruitClient:
     def __init__(self, api_base="https://iran.fruitcraft.ir/"):
         self.api_base = api_base.rstrip('/')
         self.session = requests.Session()
-        self.session.verify = False
+        self.session.verify = False  # Ignore SSL errors for legacy game servers
         self.q = 0
         self.udid = None
 
-    def _xor_str(self, edata: bytes, key: bytes) -> bytes:
-        key += key * ((len(edata) // len(key)) + 1)
-        byteorder = sys.byteorder
-        key, var = key[:len(edata)], edata
-        int_var = int.from_bytes(var, byteorder)
-        int_key = int.from_bytes(key, byteorder)
-        int_enc = int_var ^ int_key
-        return int_enc.to_bytes(len(var), byteorder)
+    def _xor_str(self, data: bytes, key: bytes) -> bytes:
+        result = bytearray()
+        for i in range(len(data)):
+            result.append(data[i] ^ key[i % len(key)])
+        return bytes(result)
 
     def encrypt_v2(self, payload_dict: dict) -> str:
         key_str = "mwBSDp1nMhcdCravltVGADXTFx7bN9mr0XMgyDezIJghf65lvXhRdLWrScCk"
@@ -56,8 +55,7 @@ class FruitClient:
             'model': 'FruitClient',
             'store_type': 'myket'
         }
-        import urllib3
-        urllib3.disable_warnings()
+        
         resp_json = self.post('/player/load', payload)
         if resp_json and resp_json.get('status'):
             # Comeback
@@ -101,4 +99,3 @@ class FruitClient:
         if resp and resp.get('status') and 'result' in resp:
             self.q += 1
         return resp
-
