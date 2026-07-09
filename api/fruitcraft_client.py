@@ -1,0 +1,104 @@
+import json
+import base64
+import sys
+import hashlib
+import urllib.parse as url
+import requests
+import logging
+
+class FruitClient:
+    def __init__(self, api_base="https://iran.fruitcraft.ir/"):
+        self.api_base = api_base.rstrip('/')
+        self.session = requests.Session()
+        self.session.verify = False
+        self.q = 0
+        self.udid = None
+
+    def _xor_str(self, edata: bytes, key: bytes) -> bytes:
+        key += key * ((len(edata) // len(key)) + 1)
+        byteorder = sys.byteorder
+        key, var = key[:len(edata)], edata
+        int_var = int.from_bytes(var, byteorder)
+        int_key = int.from_bytes(key, byteorder)
+        int_enc = int_var ^ int_key
+        return int_enc.to_bytes(len(var), byteorder)
+
+    def encrypt_v2(self, payload_dict: dict) -> str:
+        key_str = "mwBSDp1nMhcdCravltVGADXTFx7bN9mr0XMgyDezIJghf65lvXhRdLWrScCk"
+        payload_str = json.dumps(payload_dict, separators=(',', ':'))
+        edata_b = payload_str.encode('utf-8')
+        key_b = key_str.encode('utf-8')
+        encrypted = base64.b64encode(self._xor_str(edata_b, key_b))
+        return url.quote(encrypted, safe="")
+
+    def post(self, endpoint, payload_dict):
+        target_url = self.api_base + endpoint
+        edata_val = self.encrypt_v2(payload_dict)
+        raw_body = f"edata={edata_val}&version=2"
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 10; FruitClient API Build/QQ3A.200805.001)'
+        }
+        resp = self.session.post(target_url, data=raw_body, headers=headers, timeout=15)
+        if resp.status_code == 200:
+            return resp.json()
+        return None
+
+    def login(self, recovery_code, udid):
+        self.udid = udid
+        payload = {
+            'udid': udid,
+            'restore_key': recovery_code,
+            'game_version': '1.10.10755',
+            'os_type': 2,
+            'device_name': 'FruitClient_Bot',
+            'os_version': '10',
+            'model': 'FruitClient',
+            'store_type': 'myket'
+        }
+        import urllib3
+        urllib3.disable_warnings()
+        resp_json = self.post('/player/load', payload)
+        if resp_json and resp_json.get('status'):
+            # Comeback
+            self.post('/player/comeback', {})
+            # Update q
+            player_id = str(resp_json.get('data', {}).get('id', ''))
+            if 'players_info' in resp_json and player_id in resp_json['players_info']:
+                self.q = resp_json['players_info'][player_id].get('q', 0)
+            elif 'data' in resp_json and 'q' in resp_json['data']:
+                self.q = resp_json['data'].get('q', 0)
+            return True, resp_json
+        return False, resp_json
+
+    def get_profile(self):
+        return self.post('/player/getplayerinfo', {})
+
+    def do_quest(self, card_ids):
+        payload = {
+            'cards': json.dumps(card_ids),
+            'check': hashlib.md5(str(self.q).encode('utf-8')).hexdigest()
+        }
+        resp = self.post('/battle/quest', payload)
+        if resp and resp.get('status') and 'result' in resp:
+            self.q += 1 # Optimistic update
+        return resp
+
+    def collect_gold(self):
+        return self.post('/cards/collectgold', {})
+
+    def scout(self, opponent_id):
+        return self.post('/battle/scout', {'opponent_id': opponent_id})
+        
+    def battle(self, opponent_id, card_ids, attacks_in_today=1):
+        payload = {
+            'opponent_id': opponent_id,
+            'attacks_in_today': attacks_in_today,
+            'cards': json.dumps(card_ids),
+            'check': hashlib.md5(str(self.q).encode('utf-8')).hexdigest()
+        }
+        resp = self.post('/battle/battle', payload)
+        if resp and resp.get('status') and 'result' in resp:
+            self.q += 1
+        return resp
+
