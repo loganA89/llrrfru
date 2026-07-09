@@ -54,7 +54,10 @@ class SessionManager:
             'restore_key': recovery_code,
             'game_version': game_version,
             'os_type': '2',
-            'device_name': 'API_Session_Manager'
+            'device_name': 'API_Session_Manager',
+            'os_version': '10',
+            'model': 'TestModel_API',
+            'store_type': 'myket'
         }
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         
@@ -78,7 +81,7 @@ class SessionManager:
                 else:
                     logging.error(f"Login failed by API: {resp_json}")
             else:
-                logging.error(f"HTTP Error during login: {resp.status_code}")
+                logging.error(f"HTTP Error during login: {resp.status_code} - {resp.text}")
         except Exception as e:
             logging.error(f"Login request failed: {e}")
         return False, None
