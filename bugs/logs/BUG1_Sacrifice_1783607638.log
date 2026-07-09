@@ -1,0 +1,5 @@
+[2026-07-09 19:03:58] TEST STARTED: Bug 1
+[2026-07-09 19:03:58] PAYLOAD: {'card_id': 702962060, 'sacrifices': [700240573, 700240573, 700240573, 700240573]}
+[2026-07-09 19:03:59] Server returned an HTML exception/crash instead of JSON. Assuming PATCHED/INVALID.
+[2026-07-09 19:03:59] RESPONSE: {'status': False, 'error': 'Server returned HTML exception', 'raw_html': True}
+[2026-07-09 19:03:59] RESULT: PATCHED

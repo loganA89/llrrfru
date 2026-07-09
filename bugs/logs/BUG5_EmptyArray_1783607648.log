@@ -1,0 +1,5 @@
+[2026-07-09 19:04:08] TEST STARTED: Bug 5
+[2026-07-09 19:04:08] PAYLOAD: {'cards': '[]', 'check': '59c33016884a62116be975a9bb8257e3'}
+[2026-07-09 19:04:09] Server returned an HTML exception/crash instead of JSON. Assuming PATCHED/INVALID.
+[2026-07-09 19:04:09] RESPONSE: {'status': False, 'error': 'Server returned HTML exception', 'raw_html': True}
+[2026-07-09 19:04:09] RESULT: VULNERABLE (Server Crashed)
