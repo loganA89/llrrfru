@@ -221,15 +221,16 @@ class FruitClient:
         """Fetch the logged-in player's profile data."""
         return self.post('/player/getplayerinfo', {})
 
-    def do_quest(self, card_ids: List[int]) -> Optional[Dict]:
+    def do_quest(self, card_ids: List[int]) -> Optional[dict]:
         """Execute a quest sequence with the specified cards."""
+        card_id = card_ids[0] if card_ids else 0
         payload = {
-            'cards': json.dumps(card_ids),
+            'cards': str(card_id),
             'check': hashlib.md5(str(self.q).encode('utf-8')).hexdigest()
         }
         resp = self.post('/battle/quest', payload)
         if resp and resp.get('status') and 'result' in resp:
-            self.q += 1
+            self.q += 1 # Optimistic update
         return resp
 
     def collect_gold(self) -> Optional[Dict]:
