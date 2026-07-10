@@ -298,3 +298,46 @@ class FruitClient:
     def buy_card_pack(self, pack_id: int) -> Optional[Dict]:
         """Buy a card pack from the shop"""
         return self.post('/store/buycardpack', {'type': pack_id})
+
+    def do_quest_old_format(self, card_id: int) -> Optional[dict]:
+        """Quest using OLD encryption (not V2)"""
+        payload = {
+            'cards': str(card_id),
+            'check': hashlib.md5(str(self.q).encode('utf-8')).hexdigest()
+        }
+        # Simple base64 (not XOR encrypted)
+        payload_str = json.dumps(payload, separators=(',', ':'))
+        simple_edata = base64.b64encode(payload_str.encode()).decode()
+        simple_edata = urllib.parse.quote(simple_edata, safe="")
+        
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 10; FruitClient API Build/QQ3A.200805.001)'
+        }
+        if self.passport:
+            headers['Cookie'] = f'FRUITPASSPORT={self.passport}'
+            
+        try:
+            resp = self.session.post(
+                self.api_base + '/battle/quest',
+                data=f"edata={simple_edata}",
+                headers=headers,
+                timeout=15
+            )
+            
+            if resp.status_code == 200:
+                try:
+                    return resp.json()
+                except:
+                    try:
+                        return json.loads(resp.text)
+                    except:
+                        # Fallback in case response is V2 encrypted
+                        return self.decrypt_response(resp.text)
+            elif resp.status_code == 429:
+                self.logger.warning("HTTP 429 Too Many Requests")
+                return {"status": False, "error": "HTTP 429"}
+        except Exception as e:
+            self.logger.error(f"Old quest error: {e}")
+            return {"status": False, "error": str(e)}
+        return None

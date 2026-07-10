@@ -64,7 +64,7 @@ def main():
             
             req_burst += 1
             
-            q_resp = client.do_quest([card_id])
+            q_resp = client.do_quest_old_format(card_id)
             
             if q_resp and q_resp.get('status'):
                 q_data = q_resp.get('data', {})
