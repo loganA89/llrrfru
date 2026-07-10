@@ -41,9 +41,16 @@ class FruitClient:
 
     def decrypt_response(self, encrypted_text: str) -> dict:
         """Decrypt V2 encrypted server response"""
-        if '<html' in str(encrypted_text).lower():
+        text_str = str(encrypted_text).strip()
+        if '<html' in text_str.lower():
             return {"status": False, "error": "HTML Error Response (Zend Crash/Rate Limit)", "raw_html": True, "raw": encrypted_text}
-        
+            
+        if text_str.startswith('{') or text_str.startswith('['):
+            try:
+                return json.loads(text_str)
+            except:
+                pass
+                
         key = "mwBSDp1nMhcdCravltVGADXTFx7bN9mr0XMgyDezIJghf65lvXhRdLWrScCk"
         try:
             data = base64.b64decode(urllib.parse.unquote(encrypted_text))
@@ -95,7 +102,7 @@ class FruitClient:
                 self.logger.error(f"Error handling captcha: {e}")
         return False
 
-    def post(self, endpoint: str, payload_dict: dict, retry: int = 0) -> Optional[Dict]:
+    def post(self, endpoint: str, payload_dict: dict, retry: int = 0) -> Optional[dict]:
         """Send an encrypted POST request, handling errors and CAPTCHA automatically."""
         target_url = self.api_base + endpoint
         edata_val = self.encrypt_v2(payload_dict)
@@ -113,6 +120,34 @@ class FruitClient:
                 if retry < 3:
                     return self.post(endpoint, payload_dict, retry + 1)
                 return None
+                
+            if resp.status_code == 200:
+                decrypted = self.decrypt_response(resp.text)
+                if not decrypted:
+                    return None
+                    
+                # Check CAPTCHA
+                data_block = decrypted.get('data')
+                if isinstance(data_block, dict) and data_block.get('needs_captcha'):
+                    if retry < 3:
+                        if self._handle_captcha():
+                            return self.post(endpoint, payload_dict, retry + 1)
+                    return decrypted
+                    
+                # Check error backoff
+                if not decrypted.get('status'):
+                    err_code = decrypted.get('data', {}).get('code') if isinstance(decrypted.get('data'), dict) else None
+                    if err_code:
+                        self.handle_error_backoff(err_code)
+                        if retry < 3 and err_code in (156, 124, 184):
+                            return self.post(endpoint, payload_dict, retry + 1)
+                    
+                return decrypted
+            else:
+                self.logger.error(f"HTTP {resp.status_code} on POST {endpoint}")
+        except Exception as e:
+            self.logger.error(f"Exception on POST {endpoint}: {e}")
+        return None
                 
             if resp.status_code == 200:
                 decrypted = self.decrypt_response(resp.text)

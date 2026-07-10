@@ -43,7 +43,6 @@ def main():
     level = player_data.get('level', 1)
     
     # Filter weak cards (power < 70) for questing
-    # Keep strong cards available for offense ministry mapping
     cards = [c['id'] for c in player_data.get('cards', []) if c.get('power', 0) < 70]
     
     if not cards:
@@ -60,13 +59,11 @@ def main():
     
     try:
         while True:
-            # 1. Pop the first card and append it to the back (Rotate selection)
             card_id = cards[0]
             cards.append(cards.pop(0))
             
             req_burst += 1
             
-            # 2. Execute Quest
             q_resp = client.do_quest([card_id])
             
             if q_resp and q_resp.get('status'):
@@ -82,21 +79,23 @@ def main():
                     sys.stdout.flush()
                 else:
                     print("\n[!] Quest succeeded but no XP gained. Make sure your Offense Ministry has high power cards assigned!")
-                    # Keep trying instead of breaking, sometimes it fluctuates
                     time.sleep(2)
             else:
-                err = q_resp.get('error', 'Unknown Error') if q_resp else "Connection Timeout / 429"
+                if q_resp:
+                    err_code = q_resp.get('data', {}).get('code') if isinstance(q_resp.get('data'), dict) else None
+                    err = f"Error Code {err_code}" if err_code else str(q_resp)
+                else:
+                    err = "Connection Timeout / 429"
+                    
                 print(f"\n[!] Quest Request Failed: {err}")
                 time.sleep(3)
             
-            # 3. Rate Limiting Logic
             if req_burst >= 60:
                 sys.stdout.write(f"\r『Quest Bot』 ╾ Reached {req_burst} rapid requests. Sleeping 10s to prevent ban...                 ")
                 sys.stdout.flush()
                 time.sleep(10)
                 req_burst = 0
             else:
-                # 1.5s pause to avoid rapid IP block / HTTP 429
                 time.sleep(1.5)
                 
     except KeyboardInterrupt:
