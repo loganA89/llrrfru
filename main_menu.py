@@ -2,23 +2,20 @@ import os
 import sys
 import time
 
-# Ensure we can import from the api folder
 sys.path.insert(0, os.path.dirname(__file__))
 from api.account_manager import AccountManager
 from api.fruitcraft_client import FruitClient
 
 def clear_screen():
-    """Clear the console screen."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def print_header(title: str):
-    """Print a styled header."""
-    print("\n" + "=" * 40)
-    print(f"  {title}")
-    print("=" * 40)
+def print_header(title):
+    print("")
+    print("========================================")
+    print("  " + title)
+    print("========================================")
 
-def menu_new_account(am: AccountManager):
-    """Handle creation of a new account."""
+def menu_new_account(am):
     print_header("New Account")
     name = input("Enter account name: ").strip()
     if not name:
@@ -31,12 +28,11 @@ def menu_new_account(am: AccountManager):
         return
         
     if am.add_account(name, code):
-        print(f"\nSuccess! Account '{name}' has been created.")
+        print("\nSuccess! Account '" + name + "' has been created.")
     else:
-        print(f"\nError: Account '{name}' already exists.")
+        print("\nError: Account '" + name + "' already exists.")
 
-def menu_edit_account(am: AccountManager):
-    """Submenu to edit, disable, or delete an existing account."""
+def menu_edit_account(am):
     print_header("Edit Account")
     accounts = am.list_accounts()
     if not accounts:
@@ -46,7 +42,7 @@ def menu_edit_account(am: AccountManager):
     names = list(accounts.keys())
     for i, name in enumerate(names, 1):
         status = "DISABLED" if accounts[name].get("disabled") else "ACTIVE"
-        print(f"{i}. {name} [{status}]")
+        print(str(i) + ". " + name + " [" + status + "]")
         
     try:
         choice = int(input("\nSelect account number: ")) - 1
@@ -63,7 +59,7 @@ def menu_edit_account(am: AccountManager):
         if not acc:
             break
             
-        print_header(f"Editing: {selected_name}")
+        print_header("Editing: " + selected_name)
         print("1. Edit Name")
         print("2. Edit Recovery Code")
         print("3. Disable Account")
@@ -88,10 +84,10 @@ def menu_edit_account(am: AccountManager):
                 print("Recovery code updated successfully.")
         elif opt == '3':
             am.disable_account(selected_name)
-            print(f"Account '{selected_name}' disabled.")
+            print("Account disabled.")
         elif opt == '4':
             am.enable_account(selected_name)
-            print(f"Account '{selected_name}' enabled.")
+            print("Account enabled.")
         elif opt == '5':
             confirm = input("Type 'yes' to confirm deletion: ").strip().lower()
             if confirm == 'yes':
@@ -103,8 +99,7 @@ def menu_edit_account(am: AccountManager):
         else:
             print("Invalid option. Please try again.")
 
-def extract_packs(data: dict) -> list:
-    """Helper to dynamically find packs in the shop JSON response."""
+def extract_packs(data):
     if isinstance(data, list):
         return data
     elif isinstance(data, dict):
@@ -112,12 +107,10 @@ def extract_packs(data: dict) -> list:
             return data["card_packs"]
         elif "items" in data:
             return data["items"]
-        # Fallback: find dicts with an 'id'
         return [v for k, v in data.items() if isinstance(v, dict) and "id" in v]
     return []
 
-def menu_card_shop(am: AccountManager):
-    """Test script to buy card packs using an active account."""
+def menu_card_shop(am):
     print_header("Card Shop Test")
     
     accounts = am.list_accounts()
@@ -129,10 +122,11 @@ def menu_card_shop(am: AccountManager):
         
     print("Select an account to login:")
     for i, acc in enumerate(active_accounts, 1):
-        print(f"{i}. {acc['name']}")
+        print(str(i) + ". " + acc['name'])
         
     try:
-        choice = int(input("\nSelect account number: ")) - 1
+        print("")
+        choice = int(input("Select account number: ")) - 1
         if choice < 0 or choice >= len(active_accounts):
             print("Error: Invalid selection.")
             return
@@ -141,12 +135,12 @@ def menu_card_shop(am: AccountManager):
         print("Error: Invalid input format.")
         return
 
-    print(f"\nLogging in as {selected_acc['name']}...")
+    print("\nLogging in as " + selected_acc['name'] + "...")
     client = FruitClient()
     success, resp = client.login(selected_acc['recovery_code'], selected_acc['udid'])
     
     if not success:
-        print(f"Error: Login failed for {selected_acc['name']}.")
+        print("Error: Login failed for " + selected_acc['name'] + ".")
         return
         
     print("Login successful! Fetching shop items...")
@@ -166,7 +160,7 @@ def menu_card_shop(am: AccountManager):
     
     for p in packs:
         p_id = p.get('id')
-        name = p.get('name', f"Pack {p_id}")
+        name = p.get('name', "Pack " + str(p_id))
         
         raw_price = p.get('priceNumber')
         if raw_price is None:
@@ -186,7 +180,6 @@ def menu_card_shop(am: AccountManager):
             is_gold = True
             display_price = str(raw_price)
             
-        # Exceptions for explicitly requested IDs if they somehow bypass the check
         if str(p_id) in ['90', '91']:
             is_gold = True
             
@@ -197,17 +190,20 @@ def menu_card_shop(am: AccountManager):
         print("No gold-buyable packs found.")
         return
         
-    for i, (p_id, name, price) in enumerate(pack_list, 1):
-        print(f"{i}. {name} (ID: {p_id}) - {price} Gold")
+    for i, item in enumerate(pack_list, 1):
+        p_id, name, price = item
+        print(str(i) + ". " + name + " (ID: " + str(p_id) + ") - " + str(price) + " Gold")
         
     try:
-        pack_choice = int(input("\nSelect pack number to buy: ")) - 1
+        print("")
+        pack_choice = int(input("Select pack number to buy: ")) - 1
         if pack_choice < 0 or pack_choice >= len(pack_list):
             print("Error: Invalid selection.")
             return
             
         selected_pack_id, selected_pack_name, selected_pack_price = pack_list[pack_choice]
-        qty = int(input(f"How many '{selected_pack_name}' do you want to buy? "))
+        print("")
+        qty = int(input("How many '" + selected_pack_name + "' do you want to buy? "))
         
         if qty <= 0:
             print("Error: Quantity must be greater than 0.")
@@ -216,12 +212,12 @@ def menu_card_shop(am: AccountManager):
         print("Error: Invalid input.")
         return
 
-    print(f"\nBuying {qty}x '{selected_pack_name}'...")
+    print("\nBuying " + str(qty) + "x '" + selected_pack_name + "'...")
     successful_buys = 0
     total_spent = 0
     
     for i in range(qty):
-        print(f"Attempt {i+1}/{qty}...", end=" ")
+        print("Attempt " + str(i+1) + "/" + str(qty) + "...", end=" ")
         buy_resp = client.buy_card_pack(selected_pack_id)
         
         if buy_resp and buy_resp.get("status"):
@@ -234,32 +230,32 @@ def menu_card_shop(am: AccountManager):
                 pass
         else:
             err = buy_resp.get("error", "Unknown error") if buy_resp else "No response"
-            print(f"Failed: {err}")
+            print("Failed: " + str(err))
             
         if i < qty - 1:
-            time.sleep(1) # Delay to prevent server rate limiting
+            time.sleep(1)
             
-    print("\n" + "="*30)
+    print("\n==============================")
     print("      PURCHASE SUMMARY")
-    print("="*30)
-    print(f"Packs bought successfully : {successful_buys}/{qty}")
+    print("==============================")
+    print("Packs bought successfully : " + str(successful_buys) + "/" + str(qty))
     if total_spent > 0:
-        print(f"Estimated gold spent      : {total_spent}")
-    print("="*30)
+        print("Estimated gold spent      : " + str(total_spent))
+    print("==============================")
 
 def main():
-    """Main execution loop for the CLI."""
     am = AccountManager()
     
     while True:
-        print("\n┌─────────────────────────────────┐")
-        print("│  FruitCraft Account Manager     │")
-        print("├─────────────────────────────────┤")
-        print("│  1. New Account                 │")
-        print("│  2. Edit Account                │")
-        print("│  3. Card Shop                   │")
-        print("│  4. Exit                        │")
-        print("└─────────────────────────────────┘")
+        print("\n+---------------------------------+")
+        print("|  FruitCraft Account Manager     |")
+        print("+---------------------------------+")
+        print("|  1. New Account                 |")
+        print("|  2. Edit Account                |")
+        print("|  3. Card Shop                   |")
+        print("|  4. Exit                        |")
+        print("+---------------------------------+")
+        print("")
         
         choice = input("Select an option: ").strip()
         
