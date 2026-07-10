@@ -66,38 +66,38 @@ def main():
             
             req_burst += 1
             
-            # 2. Execute Quest (FruitClient automatically solves CAPTCHA when needs_captcha: True is detected)
+            # 2. Execute Quest
             q_resp = client.do_quest([card_id])
             
             if q_resp and q_resp.get('status'):
                 q_data = q_resp.get('data', {})
-                xp_added = q_data.get('xp_added', 0)
+                xp_added = q_data.get('xp_added', q_data.get('xpGain', 0))
                 
                 if xp_added > 0:
                     total_xp += xp_added
                     level = q_data.get('level', level)
                     quest_count += 1
                     
-                    # Live Terminal Update
                     sys.stdout.write(f"\r『Quest Bot』 ╾ Quests: {quest_count} | XP: +{total_xp} | Level: {level} | Burst: {req_burst}/60   ")
                     sys.stdout.flush()
                 else:
                     print("\n[!] Quest succeeded but no XP gained. Make sure your Offense Ministry has high power cards assigned!")
-                    break
+                    # Keep trying instead of breaking, sometimes it fluctuates
+                    time.sleep(2)
             else:
-                err = q_resp.get('error', 'Unknown Error') if q_resp else "Connection Timeout"
+                err = q_resp.get('error', 'Unknown Error') if q_resp else "Connection Timeout / 429"
                 print(f"\n[!] Quest Request Failed: {err}")
-                time.sleep(2)
+                time.sleep(3)
             
-            # 3. Rate Limiting Logic (60-70 requests before resting)
+            # 3. Rate Limiting Logic
             if req_burst >= 60:
-                sys.stdout.write(f"\r『Quest Bot』 ╾ Reached {req_burst} rapid requests. Sleeping 5s to prevent ban...                 ")
+                sys.stdout.write(f"\r『Quest Bot』 ╾ Reached {req_burst} rapid requests. Sleeping 10s to prevent ban...                 ")
                 sys.stdout.flush()
-                time.sleep(5)
+                time.sleep(10)
                 req_burst = 0
             else:
-                # Minimum 0.5s pause to avoid rapid IP block
-                time.sleep(0.5)
+                # 1.5s pause to avoid rapid IP block / HTTP 429
+                time.sleep(1.5)
                 
     except KeyboardInterrupt:
         print(f"\n\nStopping bot gracefully. Final session stats:")

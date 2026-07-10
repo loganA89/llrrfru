@@ -41,6 +41,9 @@ class FruitClient:
 
     def decrypt_response(self, encrypted_text: str) -> dict:
         """Decrypt V2 encrypted server response"""
+        if '<html' in str(encrypted_text).lower():
+            return {"status": False, "error": "HTML Error Response (Zend Crash/Rate Limit)", "raw_html": True, "raw": encrypted_text}
+        
         key = "mwBSDp1nMhcdCravltVGADXTFx7bN9mr0XMgyDezIJghf65lvXhRdLWrScCk"
         try:
             data = base64.b64decode(urllib.parse.unquote(encrypted_text))
@@ -103,10 +106,37 @@ class FruitClient:
         }
         try:
             resp = self.session.post(target_url, data=raw_body, headers=headers, timeout=15)
+            
+            if resp.status_code == 429:
+                self.logger.warning(f"HTTP 429 Too Many Requests. Sleeping 10s... (Attempt {retry+1})")
+                time.sleep(10)
+                if retry < 3:
+                    return self.post(endpoint, payload_dict, retry + 1)
+                return None
+                
             if resp.status_code == 200:
                 decrypted = self.decrypt_response(resp.text)
                 if not decrypted:
                     return None
+                    
+                # Check CAPTCHA
+                data_block = decrypted.get('data')
+                if isinstance(data_block, dict) and data_block.get('needs_captcha'):
+                    if retry < 3:
+                        if self._handle_captcha():
+                            return self.post(endpoint, payload_dict, retry + 1)
+                    return decrypted
+                    
+                # Check error backoff
+                if not decrypted.get('status') and 'error_code' in decrypted:
+                    self.handle_error_backoff(decrypted['error_code'])
+                    
+                return decrypted
+            else:
+                self.logger.error(f"HTTP {resp.status_code} on POST {endpoint}")
+        except Exception as e:
+            self.logger.error(f"Exception on POST {endpoint}: {e}")
+        return None
                     
                 # Check CAPTCHA
                 data_block = decrypted.get('data')
@@ -159,7 +189,7 @@ class FruitClient:
     def do_quest(self, card_ids: List[int]) -> Optional[Dict]:
         """Execute a quest sequence with the specified cards."""
         payload = {
-            'cards': card_ids,
+            'cards': json.dumps(card_ids),
             'check': hashlib.md5(str(self.q).encode('utf-8')).hexdigest()
         }
         resp = self.post('/battle/quest', payload)
@@ -180,7 +210,7 @@ class FruitClient:
         payload = {
             'opponent_id': opponent_id,
             'attacks_in_today': attacks_in_today,
-            'cards': card_ids,
+            'cards': json.dumps(card_ids),
             'check': hashlib.md5(str(self.q).encode('utf-8')).hexdigest()
         }
         resp = self.post('/battle/battle', payload)
@@ -195,15 +225,15 @@ class FruitClient:
 
     def assign_to_mine(self, cards: List[int]) -> Optional[Dict]:
         """Assign specific cards to Gold Mine (Type 1001)."""
-        return self.post('/cards/assign', {'type': 1001, 'cards': cards})
+        return self.post('/cards/assign', {'type': 1001, 'cards': json.dumps(cards)})
 
     def assign_to_offense(self, cards: List[int]) -> Optional[Dict]:
         """Assign specific cards to Offense Ministry (Type 1002)."""
-        return self.post('/cards/assign', {'type': 1002, 'cards': cards})
+        return self.post('/cards/assign', {'type': 1002, 'cards': json.dumps(cards)})
 
     def assign_to_defense(self, cards: List[int]) -> Optional[Dict]:
         """Assign specific cards to Defense Ministry (Type 1003)."""
-        return self.post('/cards/assign', {'type': 1003, 'cards': cards})
+        return self.post('/cards/assign', {'type': 1003, 'cards': json.dumps(cards)})
 
     def heal_card(self, card_id: int) -> Optional[Dict]:
         """Heal/cooloff a specific card manually."""
