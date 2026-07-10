@@ -270,4 +270,4 @@ class FruitClient:
 
     def buy_card_pack(self, pack_id: int) -> Optional[Dict]:
         """Buy a card pack from the shop"""
-        return self.post('/store/buycardpack', {'card_pack_type': pack_id})
+        return self.post('/store/buycardpack', {'type': pack_id})
