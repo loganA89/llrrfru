@@ -91,7 +91,7 @@ def main():
             print(f"Failed: {err}")
             
         if i < qty - 1:
-            time.sleep(1) # Delay to prevent server rate limiting
+            time.sleep(1.5) # Minimum 1.5s delay required by server
             
     print("\n" + "="*30)
     print("      PURCHASE SUMMARY")
