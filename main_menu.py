@@ -132,7 +132,8 @@ def menu_card_shop(am: AccountManager):
         print(f"{i}. {acc['name']}")
         
     try:
-        choice = int(input("\nSelect account number: ")) - 1
+        choice = int(input("
+Select account number: ")) - 1
         if choice < 0 or choice >= len(active_accounts):
             print("Error: Invalid selection.")
             return
@@ -141,7 +142,8 @@ def menu_card_shop(am: AccountManager):
         print("Error: Invalid input format.")
         return
 
-    print(f"\nLogging in as {selected_acc['name']}...")
+    print(f"
+Logging in as {selected_acc['name']}...")
     client = FruitClient()
     success, resp = client.login(selected_acc['recovery_code'], selected_acc['udid'])
     
@@ -161,22 +163,49 @@ def menu_card_shop(am: AccountManager):
         print("Error: No packs found in the shop response.")
         return
         
-    print("\nAvailable Card Packs:")
+    print("
+Available Gold Card Packs:")
     pack_list = []
     
     for p in packs:
         p_id = p.get('id')
         name = p.get('name', f"Pack {p_id}")
-        price = p.get('priceNumber', p.get('price', 'Unknown'))
         
-        if p_id is not None:
-            pack_list.append((p_id, name, price))
+        raw_price = p.get('priceNumber')
+        if raw_price is None:
+            raw_price = p.get('price')
             
+        is_gold = False
+        display_price = "Unknown"
+        
+        if isinstance(raw_price, dict):
+            is_gold = True
+            display_price = str(raw_price.get('13', raw_price.get('1', 'Unknown')))
+        elif isinstance(raw_price, str):
+            if '.' not in raw_price and '$' not in raw_price:
+                is_gold = True
+                display_price = raw_price
+        elif isinstance(raw_price, int):
+            is_gold = True
+            display_price = str(raw_price)
+            
+        # Exceptions for explicitly requested IDs if they somehow bypass the check
+        if str(p_id) in ['90', '91']:
+            is_gold = True
+            
+        if is_gold and p_id is not None:
+            pack_list.append((p_id, name, display_price))
+            
+    if not pack_list:
+        print("No gold-buyable packs found.")
+        return
+        
     for i, (p_id, name, price) in enumerate(pack_list, 1):
         print(f"{i}. {name} (ID: {p_id}) - {price} Gold")
         
     try:
-        pack_choice = int(input("\nSelect pack number to buy: ")) - 1
+        pack_choice = int(input("
+Select pack number to buy: ")) - 1
         if pack_choice < 0 or pack_choice >= len(pack_list):
             print("Error: Invalid selection.")
             return
@@ -191,7 +220,8 @@ def menu_card_shop(am: AccountManager):
         print("Error: Invalid input.")
         return
 
-    print(f"\nBuying {qty}x '{selected_pack_name}'...")
+    print(f"
+Buying {qty}x '{selected_pack_name}'...")
     successful_buys = 0
     total_spent = 0
     
@@ -203,7 +233,8 @@ def menu_card_shop(am: AccountManager):
             print("Success!")
             successful_buys += 1
             try:
-                total_spent += int(selected_pack_price)
+                clean_price = ''.join(c for c in str(selected_pack_price) if c.isdigit())
+                total_spent += int(clean_price)
             except:
                 pass
         else:
@@ -213,13 +244,15 @@ def menu_card_shop(am: AccountManager):
         if i < qty - 1:
             time.sleep(1) # Delay to prevent server rate limiting
             
-    print("\n" + "="*30)
+    print("
+" + "="*30)
     print("      PURCHASE SUMMARY")
     print("="*30)
     print(f"Packs bought successfully : {successful_buys}/{qty}")
     if total_spent > 0:
         print(f"Estimated gold spent      : {total_spent}")
     print("="*30)
+
 
 def main():
     """Main execution loop for the CLI."""
