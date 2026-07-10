@@ -22,6 +22,7 @@ class FruitClient:
         self.session.verify = False  # Ignore SSL errors for legacy game servers
         self.q = 0
         self.udid = None
+        self.passport = ""
         self.logger = logging.getLogger("FruitClient")
         self.captcha_solver = CaptchaSolver()
 
@@ -111,6 +112,8 @@ class FruitClient:
             'Content-Type': 'application/x-www-form-urlencoded',
             'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 10; FruitClient API Build/QQ3A.200805.001)'
         }
+        if self.passport:
+            headers['Cookie'] = f"FRUITPASSPORT={self.passport}"
         try:
             resp = self.session.post(target_url, data=raw_body, headers=headers, timeout=15)
             
