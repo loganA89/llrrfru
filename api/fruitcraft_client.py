@@ -159,7 +159,7 @@ class FruitClient:
     def do_quest(self, card_ids: List[int]) -> Optional[Dict]:
         """Execute a quest sequence with the specified cards."""
         payload = {
-            'cards': json.dumps(card_ids),
+            'cards': card_ids,
             'check': hashlib.md5(str(self.q).encode('utf-8')).hexdigest()
         }
         resp = self.post('/battle/quest', payload)
@@ -180,7 +180,7 @@ class FruitClient:
         payload = {
             'opponent_id': opponent_id,
             'attacks_in_today': attacks_in_today,
-            'cards': json.dumps(card_ids),
+            'cards': card_ids,
             'check': hashlib.md5(str(self.q).encode('utf-8')).hexdigest()
         }
         resp = self.post('/battle/battle', payload)
@@ -195,15 +195,15 @@ class FruitClient:
 
     def assign_to_mine(self, cards: List[int]) -> Optional[Dict]:
         """Assign specific cards to Gold Mine (Type 1001)."""
-        return self.post('/cards/assign', {'type': 1001, 'cards': json.dumps(cards)})
+        return self.post('/cards/assign', {'type': 1001, 'cards': cards})
 
     def assign_to_offense(self, cards: List[int]) -> Optional[Dict]:
         """Assign specific cards to Offense Ministry (Type 1002)."""
-        return self.post('/cards/assign', {'type': 1002, 'cards': json.dumps(cards)})
+        return self.post('/cards/assign', {'type': 1002, 'cards': cards})
 
     def assign_to_defense(self, cards: List[int]) -> Optional[Dict]:
         """Assign specific cards to Defense Ministry (Type 1003)."""
-        return self.post('/cards/assign', {'type': 1003, 'cards': json.dumps(cards)})
+        return self.post('/cards/assign', {'type': 1003, 'cards': cards})
 
     def heal_card(self, card_id: int) -> Optional[Dict]:
         """Heal/cooloff a specific card manually."""
