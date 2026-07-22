@@ -1,0 +1,8 @@
+
+# Sensitive and Local files
+api/accounts.json
+api/session.json
+bugs/logs/*.log
+bugs/logs/*.txt
+*.pem
+*.key
