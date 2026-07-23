@@ -1,0 +1,6 @@
+Test Category,Endpoint,Hypothesis,Status,Mitigating Control
+Session Replay,/player/getplayerinfo,Replaying FRUITPASSPORT cookie from a different IP/User-Agent allows session hijacking,Mitigated,Server strictly validates exact User-Agent match. Returns HTML crash on mismatch.
+Identity Spoofing,/player/setplayerinfo,Injecting udid or restore_key overwrites core identity and allows account takeover,Mitigated,Backend silently ignores protected fields during profile update.
+Recovery Bypass,/player/load,Using an injected email allows account recovery without restore_key,Mitigated,Server rejects email login without proper verification/key (Error 100).
+Protocol Downgrade,/player/getplayerinfo,Sending version=1 allows bypassing V2 XOR encryption,Mitigated,Server drops V1 payloads structurally (HTML crash).
+SQL Injection,/admin/login,Admin portal is vulnerable to basic auth bypass payloads,Mitigated,Returns 200 OK but redirects to login cleanly.
