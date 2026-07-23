@@ -1,0 +1,6 @@
+Workflow,Endpoint,Tested Attack Vector,Result,Explanation
+Stale Object Reuse,/auction/setcardforauction,Auctioning a card actively assigned to the Gold Mine,Mitigated,Server automatically removes the card from the assigned building array when escrowed.
+Asynchronous Sale,/auction/sellnow,Selling an active escrowed card while offline,Mitigated,Ownership transfer is atomic and correctly removes the card from the seller's inventory upon next load.
+Temporal Manipulation,/player/turnthewheel,Injecting future client timestamps to bypass daily cooldowns,Mitigated,Server utilizes authoritative backend clock to evaluate daily reset periods.
+Partial Failure Commit,/cards/enhance,Submitting a valid sacrifice alongside an invalid one to trigger a mid-flight crash,Mitigated,Database transaction rolls back atomically. Valid items are not destroyed.
+Sequence Replay,/battle/quest,Executing delayed combat hashes after logging out and reconnecting,Mitigated,Progression counter (q) is persistently validated; old hashes trigger Error 118 desyncs.
