@@ -4,12 +4,12 @@ from fruitcraft_client import FruitClient
 
 def main():
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     
     # Buy a new card
     c1.post("/store/buycardpack", {"type": 1})
     time.sleep(2)
-    s2, d2 = c1.login("fact11439memory24", "android_vuln_t1")
+    s2, d2 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     cards = d2.get("data", {}).get("cards", [])
     
     c_target2 = cards[-1]["id"]

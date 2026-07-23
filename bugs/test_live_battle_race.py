@@ -7,7 +7,7 @@ import threading
 
 def trigger_ability(cid, battle_id):
     c1 = FruitClient()
-    c1.login("fact11439memory24", "android_vuln_t1")
+    c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     res = c1.post("/live-battle/triggerability", {"card_id": cid, "battle_id": battle_id})
     print(res)
 
@@ -16,7 +16,7 @@ def main():
     # This requires an active live battle, difficult to trigger without setting one up
     # We will just verify if the endpoint crashes on garbage
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     print("\n[+] Triggering ability on non-existent battle")

@@ -5,7 +5,7 @@ from fruitcraft_client import FruitClient
 def main():
     print('Testing Restore Key / Password Logic...')
     c1 = FruitClient()
-    s1, d1 = c1.login('fact11439memory24', 'android_vuln_t1')
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     # Can we fetch our own restore key? Yes it's returned on login.
@@ -17,7 +17,7 @@ def main():
     time.sleep(2)
     # Does the old one still work?
     c2 = FruitClient()
-    s2, d2 = c2.login('hacked1234567', 'android_vuln_t1')
+    s2, d2 = c2.login('hacked1234567', os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if s2 and d2.get('data', {}).get('name') == 'test/bin/bash001':
         print('[!] SUCCESS! Restore Key changed via setplayerinfo')
     else:

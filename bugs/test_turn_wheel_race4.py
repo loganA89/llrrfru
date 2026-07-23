@@ -13,7 +13,7 @@ def withdraw(c):
 def main():
     print("Testing Concurrent Withdraws Result (Race Condition)...")
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     # ensure clean bank
@@ -24,7 +24,7 @@ def main():
     c1.post("/player/deposittobank", {"deposit": 100})
     time.sleep(2)
     
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not d1 or "data" not in d1: return
     print("Starting Bank: " + str(d1["data"].get("bank_account_balance")))
     print("Starting Gold: " + str(d1["data"].get("gold")))
@@ -41,7 +41,7 @@ def main():
 
     print()
     time.sleep(2)
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if d1 and "data" in d1:
         print("Final Bank: " + str(d1["data"].get("bank_account_balance")))
         print("Final Gold: " + str(d1["data"].get("gold")))

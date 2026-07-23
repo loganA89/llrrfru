@@ -7,10 +7,10 @@ from fruitcraft_client import FruitClient
 def main():
     print("Testing Tribe Privilege Escalation...")
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1") # T1
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1")) # T1
     
     c2 = FruitClient()
-    s2, d2 = c2.login("skirt11437fire14", "android_vuln_t2") # T2
+    s2, d2 = c2.login(os.environ.get("TEST_ACC_2_KEY", "REDACTED_KEY_2"), os.environ.get("TEST_ACC_2_UDID", "REDACTED_UDID_2")) # T2
     
     t1_id = d1.get("data", {}).get("id")
     t2_id = d2.get("data", {}).get("id")

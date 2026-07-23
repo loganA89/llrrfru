@@ -13,7 +13,7 @@ def bid(c, auc_id, amount):
 def main():
     print("Testing Concurrent Bids (Race Condition)...")
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     # Get active auction ID
@@ -33,7 +33,7 @@ def main():
     print(f"Bidding on auction {auc_id} (Current Max: {max_bid}) from T2...")
     
     c2 = FruitClient()
-    s2, d2 = c2.login("skirt11437fire14", "android_vuln_t2")
+    s2, d2 = c2.login(os.environ.get("TEST_ACC_2_KEY", "REDACTED_KEY_2"), os.environ.get("TEST_ACC_2_UDID", "REDACTED_UDID_2"))
     if not s2: return
     
     t2_gold = d2["data"].get("gold", 0)
@@ -53,7 +53,7 @@ def main():
         
     print()
     time.sleep(2)
-    s2, d2 = c2.login("skirt11437fire14", "android_vuln_t2")
+    s2, d2 = c2.login(os.environ.get("TEST_ACC_2_KEY", "REDACTED_KEY_2"), os.environ.get("TEST_ACC_2_UDID", "REDACTED_UDID_2"))
     t2_gold_end = d2["data"].get("gold", 0)
     print("T2 Gold End:", t2_gold_end)
 

@@ -6,10 +6,10 @@ def main():
     print("Testing Live Battle Status Hypothesis...")
     
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
-    opp_id = 9561877 # T2 ID
+    opp_id = int(os.environ.get("TEST_ACC_2_ID", "9999999")) # T2 ID
     
     payload = {"opponent_id": opp_id}
     res = c1.post("/live-battle/livebattle", payload)

@@ -7,11 +7,11 @@ from fruitcraft_client import FruitClient
 def main():
     print("Testing Messages/Social IDOR...")
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     c2 = FruitClient()
-    s2, d2 = c2.login("skirt11437fire14", "android_vuln_t2")
+    s2, d2 = c2.login(os.environ.get("TEST_ACC_2_KEY", "REDACTED_KEY_2"), os.environ.get("TEST_ACC_2_UDID", "REDACTED_UDID_2"))
     if not s2: return
     
     t1_id = d1["data"]["id"]

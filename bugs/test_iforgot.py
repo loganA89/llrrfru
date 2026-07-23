@@ -4,7 +4,7 @@ from fruitcraft_client import FruitClient
 
 def main():
     c1 = FruitClient()
-    res = c1.post("/user/iforgot", {"email": "test@test.com", "udid": "android_vuln_t1"})
+    res = c1.post("/user/iforgot", {"email": "test@test.com", "udid": os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1")})
     print("Forgot:", res)
 
 if __name__ == "__main__":

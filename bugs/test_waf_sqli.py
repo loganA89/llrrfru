@@ -5,7 +5,7 @@ from fruitcraft_client import FruitClient
 def main():
     print('Testing X-Forwarded-For SQLi...')
     c1 = FruitClient()
-    s1, d1 = c1.login('fact11439memory24', 'android_vuln_t1')
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     
     # Send custom header
     c1.session.headers.update({'X-Forwarded-For': "' OR 1=1 --"})

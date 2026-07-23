@@ -13,7 +13,7 @@ def sellnow(c, auc_id):
 def main():
     print("Testing Concurrent Auction SellNow...")
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     t1_gold = d1["data"].get("gold", 0)
@@ -45,7 +45,7 @@ def main():
         
     print()
     time.sleep(2)
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     t1_gold_end = d1["data"].get("gold", 0)
     print("T1 Gold End:", t1_gold_end)
 

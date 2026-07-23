@@ -6,7 +6,7 @@ from fruitcraft_client import FruitClient
 
 def main():
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     res_fb = c1.post("/player/claimfbreward", {})

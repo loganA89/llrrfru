@@ -12,14 +12,14 @@ def withdraw(c):
 def main():
     print("Testing Concurrent Withdraws Exploit (Race Condition)...")
     c1 = FruitClient()
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     if not s1: return
     
     # clean bank
     c1.post("/player/withdrawfrombank", {"withdraw": 999999})
     time.sleep(1)
 
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     start_gold = d1["data"].get("gold", 0)
     print("Starting Gold (Wallet):", start_gold)
 
@@ -27,7 +27,7 @@ def main():
     c1.post("/player/deposittobank", {"deposit": 100})
     time.sleep(1)
     
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     bank_bal = d1["data"].get("bank_account_balance", 0)
     new_gold = d1["data"].get("gold", 0)
     print(f"Bank after deposit: {bank_bal} | Wallet: {new_gold}")
@@ -44,7 +44,7 @@ def main():
 
     print()
     time.sleep(1)
-    s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
+    s1, d1 = c1.login(os.environ.get("TEST_ACC_1_KEY", "REDACTED_KEY_1"), os.environ.get("TEST_ACC_1_UDID", "REDACTED_UDID_1"))
     final_bank = d1["data"].get("bank_account_balance", 0)
     final_gold = d1["data"].get("gold", 0)
     print(f"Final Bank: {final_bank} | Final Wallet: {final_gold}")
