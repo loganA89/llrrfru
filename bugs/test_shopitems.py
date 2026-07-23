@@ -6,9 +6,10 @@ def main():
     c1 = FruitClient()
     s1, d1 = c1.login('fact11439memory24', 'android_vuln_t1')
     
-    print('Testing collection details...')
-    res = c1.post('/cards/collection', {'collection_id': 1})
-    print(res)
+    print('Testing getshopitems...')
+    # Try with version string
+    res = c1.post('/store/getshopitems', {'version': '1.10.10755'})
+    print('Result:', res)
 
 if __name__ == '__main__':
     main()

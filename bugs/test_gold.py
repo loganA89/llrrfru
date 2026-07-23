@@ -5,10 +5,12 @@ from fruitcraft_client import FruitClient
 def main():
     c1 = FruitClient()
     s1, d1 = c1.login('fact11439memory24', 'android_vuln_t1')
-    
-    print('Testing collection details...')
-    res = c1.post('/cards/collection', {'collection_id': 1})
-    print(res)
+    print('Login Status:', s1)
+    if not s1: 
+        print(d1)
+        return
+    res = c1.get_profile()
+    print('Profile Status:', res.get('status') if res else None)
 
 if __name__ == '__main__':
     main()

@@ -1,0 +1,46 @@
+Testing Network Dumping...
+send: b'POST /player/load HTTP/1.1\r\nHost: iran.fruitcraft.ir\r\nUser-Agent: Dalvik/2.1.0 (Linux; U; Android 10; FruitClient API Build/QQ3A.200805.001)\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 286\r\n\r\n'
+send: b'edata=FlU3Ny0UE1RvCQ0AMR0IEjMCIysvGyxlZFQVECtKGR1CPRIMHD1HQGssBgsSBwRYRWEFNwkjJQthV2FHTxAjPiEvRws%2FGwoLLVBbVF1aZ3dvdWhjc00VTmxWHi1EIT0CW35XVmsuAh4PVVAzGDkFN0Z2dTQhFiofLhsrNioEbiwiHEFIYR0SKRoRJDQoKzZ2fFoGUmwVTx9fPCgLW35HPDs%2FDhwlWlwJGCxKfkY%2FIx0hBhwfFAcncX5SXBcmDRdGPg%3D%3D&version=2'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: server: nginx/1.18.0
+header: date: Thu, 23 Jul 2026 11:35:48 GMT
+header: content-type: text/html; charset=UTF-8
+header: transfer-encoding: chunked
+header: x-powered-by: PHP/7.1.33
+header: Set-Cookie: FRUITPASSPORT=7d6f4014c1fda6648d0d9604701ae98c; path=/
+header: Expires: Thu, 19 Nov 1981 08:52:00 GMT
+header: cache-control: no-store, no-cache, must-revalidate
+header: pragma: no-cache
+header: access-control-allow-origin: *
+header: access-control-allow-methods: GET, POST, OPTIONS, PUT, DELETE
+header: access-control-allow-headers: Content-Type, Authorization
+send: b'POST /player/comeback HTTP/1.1\r\nHost: iran.fruitcraft.ir\r\nUser-Agent: Dalvik/2.1.0 (Linux; U; Android 10; FruitClient API Build/QQ3A.200805.001)\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\r\nContent-Type: application/x-www-form-urlencoded\r\nCookie: FRUITPASSPORT=7d6f4014c1fda6648d0d9604701ae98c\r\nContent-Length: 22\r\n\r\n'
+send: b'edata=Fgo%3D&version=2'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: server: nginx/1.18.0
+header: date: Thu, 23 Jul 2026 11:35:49 GMT
+header: content-type: text/html; charset=UTF-8
+header: transfer-encoding: chunked
+header: x-powered-by: PHP/7.1.33
+header: Expires: Thu, 19 Nov 1981 08:52:00 GMT
+header: cache-control: no-store, no-cache, must-revalidate
+header: pragma: no-cache
+header: access-control-allow-origin: *
+header: access-control-allow-methods: GET, POST, OPTIONS, PUT, DELETE
+header: access-control-allow-headers: Content-Type, Authorization
+
+[+] Clean client request:
+send: b'POST /player/getplayerinfo HTTP/1.1\r\nHost: iran.fruitcraft.ir\r\nUser-Agent: Dalvik/2.1.0 (Linux; U; Android 10; FruitClient API Build/QQ3A.200805.001)\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\r\nContent-Type: application/x-www-form-urlencoded\r\nCookie: FRUITPASSPORT=7d6f4014c1fda6648d0d9604701ae98c\r\nContent-Length: 22\r\n\r\n'
+send: b'edata=Fgo%3D&version=2'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: server: nginx/1.21.3
+header: date: Thu, 23 Jul 2026 11:35:49 GMT
+header: content-type: text/html; charset=UTF-8
+header: transfer-encoding: chunked
+header: x-powered-by: PHP/7.4.33
+header: Expires: Thu, 19 Nov 1981 08:52:00 GMT
+header: cache-control: no-store, no-cache, must-revalidate
+header: pragma: no-cache
+header: access-control-allow-origin: *
+header: access-control-allow-methods: GET, POST, OPTIONS, PUT, DELETE
+header: access-control-allow-headers: Content-Type, Authorization

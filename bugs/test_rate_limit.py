@@ -6,9 +6,14 @@ def main():
     c1 = FruitClient()
     s1, d1 = c1.login('fact11439memory24', 'android_vuln_t1')
     
-    print('Testing collection details...')
-    res = c1.post('/cards/collection', {'collection_id': 1})
-    print(res)
+    # Send requests fast
+    for i in range(10):
+        res = c1.post('/player/getplayerinfo', {})
+        if res.get('raw_html'):
+            print(f'Attempt {i}: Got HTML Crash! (Rate limit or WAF triggered)')
+            break
+        else:
+            print(f'Attempt {i}: OK')
 
 if __name__ == '__main__':
     main()
