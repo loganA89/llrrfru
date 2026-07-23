@@ -2,32 +2,26 @@ import sys, os
 import json
 import time
 import hashlib
-import threading
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "api")))
 from fruitcraft_client import FruitClient
 
-def spin(c, q):
-    payload = {"check": hashlib.md5(str(q).encode("utf-8")).hexdigest()}
-    res = c.post("/player/turnthewheel", payload)
-    print(res.get("status") if res else "Fail", end=" ")
-
 def main():
-    print("Testing Concurrent Wheel Spins (Race Condition)...")
+    print("Testing Ad Bypass (Time desync)")
     c1 = FruitClient()
     s1, d1 = c1.login("fact11439memory24", "android_vuln_t1")
     if not s1: return
     
     q_start = c1.q
-    
-    threads = []
-    # Send 5 concurrent spin requests
-    for i in range(5):
-        t = threading.Thread(target=spin, args=(c1, q_start)) 
-        threads.append(t)
-        t.start()
-        
-    for t in threads:
-        t.join()
+
+    print("\n[+] Testing Ad reward with manipulated timestamp parameter")
+    payload = {
+        "check": hashlib.md5(str(q_start).encode("utf-8")).hexdigest(),
+        "timestamp": 2000000000,
+        "time": 2000000000,
+        "date": "2030-01-01"
+    }
+    res = c1.post("/player/claimadvertismentreward", payload)
+    print("Ad Manipulated Check:", res)
 
 if __name__ == "__main__":
     main()
