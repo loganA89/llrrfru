@@ -1,0 +1,10 @@
+Resource,Action,Authorized Role,Tested Bypass Vector,Result,Mitigation Check
+Profile Messages,Read,Self,Inject target player_id,Failed,Server ignores player_id parameter and uses session token context.
+Card Enhancement,Consume/Update,Card Owner,Submit foreign card_id in sacrifices array,Failed,Server validates ownership. Returns Error 115.
+Card Assignment,Update,Card Owner,Submit foreign card_id for assignment,Failed,Server validates ownership. Returns Error 115.
+Hero Potions,Update,Card Owner,Submit foreign card_id for potion usage,Failed,Server validates ownership. Returns Error 102.
+Tribe Kick,Delete,Chief/Admin,Execute endpoint as standard member,Failed,Server enforces role verification. Returns Error 214.
+Tribe Edit,Update,Chief/Admin,Execute endpoint as standard member,Failed,Server enforces role verification.
+Auction Creation,Create,Card Owner,Submit foreign card_id for auction,Failed,Server validates ownership.
+Auction SellNow,Update,Auction Owner,Submit foreign auction_id,Failed,Server validates ownership.
+Live Battle,Create,Online Status,Submit offline opponent_id,Failed,Server enforces strict active-status checks prior to instance creation.
