@@ -1,5 +1,0 @@
-[2026-07-09 19:04:03] TEST STARTED: Bug 3
-[2026-07-09 19:04:03] PAYLOAD: {'type': 1001, 'cards': '[50000]'}
-[2026-07-09 19:04:04] Server returned an HTML exception/crash instead of JSON. Assuming PATCHED/INVALID.
-[2026-07-09 19:04:04] RESPONSE: {'status': False, 'error': 'Server returned HTML exception', 'raw_html': True}
-[2026-07-09 19:04:04] RESULT: PATCHED

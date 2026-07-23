@@ -1,6 +1,0 @@
-[2026-07-09 18:17:29] TEST STARTED: Bug 2
-[2026-07-09 18:17:29] PAYLOAD: {'player_gold': -1000}
-[2026-07-09 18:17:30] Server returned an HTML exception/crash instead of JSON. Assuming PATCHED/INVALID.
-[2026-07-09 18:17:30] RESPONSE: {'status': False, 'error': 'Server returned HTML exception', 'raw_html': True}
-[2026-07-09 18:17:30] RESULT: PATCHED
-[2026-07-09 18:17:30] TEST COMPLETED

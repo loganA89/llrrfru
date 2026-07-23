@@ -1,5 +1,0 @@
-[2026-07-09 19:04:06] TEST STARTED: Bug 4
-[2026-07-09 19:04:06] PAYLOAD: {'member_id': 9563148, 'tribe_id': 551172}
-[2026-07-09 19:04:06] Server returned an HTML exception/crash instead of JSON. Assuming PATCHED/INVALID.
-[2026-07-09 19:04:06] RESPONSE: {'status': False, 'error': 'Server returned HTML exception', 'raw_html': True}
-[2026-07-09 19:04:06] RESULT: PATCHED
