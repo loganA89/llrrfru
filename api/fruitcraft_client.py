@@ -42,7 +42,7 @@ class FruitClient:
 
     def decrypt_response(self, encrypted_text: str) -> dict:
         """Decrypt V2 encrypted server response"""
-        text_str = str(encrypted_text).strip()
+        text_str = str(encrypted_text).replace("﻿", "").strip()
         if '<html' in text_str.lower():
             return {"status": False, "error": "HTML Error Response (Zend Crash/Rate Limit)", "raw_html": True, "raw": encrypted_text}
             
@@ -54,7 +54,7 @@ class FruitClient:
                 
         key = "mwBSDp1nMhcdCravltVGADXTFx7bN9mr0XMgyDezIJghf65lvXhRdLWrScCk"
         try:
-            data = base64.b64decode(urllib.parse.unquote(encrypted_text))
+            data = base64.b64decode(urllib.parse.unquote(text_str))
             key_bytes = key.encode('utf-8')
             result = bytearray()
             for i in range(len(data)):
