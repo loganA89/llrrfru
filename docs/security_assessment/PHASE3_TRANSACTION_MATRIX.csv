@@ -1,0 +1,8 @@
+Workflow,Endpoint,Tested Attack Vector,Result,Explanation
+Ad Reward Claim,/player/claimadvertismentreward,Concurrent threads sending identical valid check hash,Mitigated,API returns false successes but database correctly prevents multiple rewards from persisting.
+Wheel Spin,/player/turnthewheel,Concurrent threads sending identical valid check hash,Mitigated,API returns false successes but database prevents duplication.
+Tribe Donation,/tribe/donate,Concurrent requests donating total available balance,Mitigated,Transaction atomic. Server rejects operations causing negative balances.
+Auction Listing,/auction/setcardforauction,Concurrent threads listing the same card ID,Mitigated,Database constraint limits card state to a single active auction listing.
+Auction Bidding,/auction/bid,Concurrent overlapping bids,Mitigated,Strict versioning/locking rejects overlapping bids cleanly (Error 107).
+Hero Potions,/cards/potionize,Float/Array injection into potion amount,Mitigated,Invalid types cause Zend unhandled exceptions (DoS) instead of unauthorized state transitions.
+Shop Card Buy,/store/buycardpack,Concurrent requests exceeding available balance,Mitigated,Database enforces strict positive balance constraints on purchasing.
