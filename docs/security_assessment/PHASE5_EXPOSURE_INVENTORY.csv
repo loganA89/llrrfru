@@ -1,0 +1,7 @@
+Category,Asset/Endpoint,Exposure Type,Status,Impact
+Infrastructure,iran.fruitcraft.ir:443,TLS Configuration,Secure,Standard TLSv1.2 with Let's Encrypt CA.
+Infrastructure,iran.fruitcraft.ir:80,HTTP Configuration,Secure,Returns 403 Forbidden / Redirects.
+API Header,X-Forwarded-For,WAF Bypass / Pollution,Vulnerable (Low Impact),Server accepts client-spoofed proxy IPs without validation.
+Administrative,/admin/login,Public Portal Exposure,Weakness,Legacy PHP portal exposed. Mitigates basic SQLi but should be hidden.
+Application Stack,PHP/7.4.33,Header Leakage,Information Disclosure,x-powered-by header reveals backend engine version.
+Client App,mwBSDp1nMhcdCravltVGADXTFx7bN9mr0XMgyDezIJghf65lvXhRdLWrScCk,Embedded Cryptography,Intended Public,XOR key is easily extracted enabling custom client creation.
